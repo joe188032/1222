@@ -1,4 +1,4 @@
-function testline(){
+function linetest(){
 var width = 1024;
 var height = 768;
 var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
