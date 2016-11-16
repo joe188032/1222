@@ -2,7 +2,7 @@ function linetest(){
 var width = 1024;
 var height = 768;
 var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
-d3.csv("https://github.com/joe188032/1222/blob/master/cpif.csv", 
+d3.csv("https://joe188032.github.io/1222/cpif.csv", 
 	function(data)
 	{
 		var ln = data.length;
