@@ -1,7 +1,11 @@
-function testline(){
+function linetestt(){
 var width = 1024;
 var height = 768;
+<<<<<<< HEAD
 var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
+=======
+var ctrl = d3.select("body.content").append("svg").attr("width", width).attr("height", height);
+>>>>>>> origin/master
 d3.csv("https://joe188032.github.io/1222/cpif.csv", 
 	function(data)
 	{
