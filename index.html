@@ -2,38 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <script src="https://d3js.org/d3.v4.min.js"></script>
   <title>Document</title>
+  <script src="https://d3js.org/d3.v4.min.js"></script>
 </head>
 <body>
-<script type="text/javascript">
-var width = 1024;
-var height = 768;
-var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
-d3.csv("./cpi.csv", 
-	function(data)
-	{
-		var ln = data.length;
-		console.log(data);
-		var maxy = d3.max(data, function(d){ return d.cpi; });
-		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.cpi*(height/maxy)});
-		ctrl.append("path").attr("d", function(d){
-			return "M0,"+height+"L"+width+","+height;
-		}).attr("stroke", "black").attr("fill", "none");
-		ctrl.append("path").attr("d", function(d){
-			return "M0,0"+"L0,"+height;
-		}).attr("stroke", "black").attr("fill", "none");
-		ctrl.append("path").data([data]).attr("d", lines).attr("stroke", "red").attr("fill", "none");
-		x.domain(d3.extent(data, function(d) { return d.year; }));
-		y.domain([0, maxy]);
-		ctrl.append("g")
-      	.attr("transform", "translate(0," + height + ")")
-      	.call(d3.axisBottom(x));
-  		ctrl.append("g")
-      	.call(d3.axisLeft(y));
-	}
+ <script> 
+ var cdata = [
+ {cx:100, cy:150, r:50, color:"black"},
+ {cx:200, cy:150, r:50, color:"black"}];
 
-);
-</script>
+ var tdata = [
+ {p1x:100, p1y:10, p2x:300, p2y:20, p3x:90, p3y:30, pcolor:"red",color:"lime"},
+ {p1x:200, p1y:50, p2x:400, p2y:60, p3x:500, p3y:40, pcolor:"blue",color:"lime"}]
+
+ var svgstrl = d3.select("body").append("svg").attr("width",500).attr("height",500);
+
+ var addDateToC = svgstrl.selectAll("circle").data(cdata).enter().append("circle");
+
+ var addC = addDateToC.attr("cx",function(d){return d.cx;}).attr("cy",function(d){return d.cy;}).attr("r",function(d){return d.r;}).attr("fill",function(d){return d.color;});
+
+ var addDataToT = svgstrl.selectAll("polygon").data(tdata).enter().append("polygon");
+
+
+ var addT = addDataToT.attr("points", 
+ 	function(t){
+ 		return t.p1x+','+t.p1y+' '+t.p2x+','+t.p2y+' '+t.p3x+','+t.p3y;
+ 	}).
+ attr("style", "stroke-width:1").attr("style", 
+ 	function(d){
+ 		return "stroke:"+d.pcolor;
+ 	}).attr("style", 
+ 	function(d){
+ 		return "fill:"+d.color;
+ 	});
+	 </script>
+ 
+
 </body>
 </html>
