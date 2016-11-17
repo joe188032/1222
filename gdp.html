@@ -16,8 +16,8 @@ var margin = {top: 20, right: 20, bottom: 30, left: 70},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
 var parseTime = d3.timeParse("%b-%y");
-var x = d3.scaleTime().range([0, width]).domain(d3.extent(data, function(d) { return d.month; }));
-var y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, function(d) { return d.gdp; })]);
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
 var valueline = d3.line()
     .x(function(d) { return x(d.month); })
     .y(function(d) { return y(d.gdp); });
@@ -34,8 +34,8 @@ d3.csv("./gdp.csv", function(error, data) {
       d.month = parseTime(d.month);
       d.gdp = +d.gdp;
   });
-//   x.domain(d3.extent(data, function(d) { return d.month; }));
-//   y.domain([0, d3.max(data, function(d) { return d.gdp; })]);
+  x.domain(d3.extent(data, function(d) { return d.month; }));
+  y.domain([0, d3.max(data, function(d) { return d.gdp; })]);
   var maxy=d3.max(data, function(d) { return d.gdp; });
   console.log(maxy);
   svg.append("path")
