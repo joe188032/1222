@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<head>
+<meta charset="utf-8">
+<script src="https://d3js.org/d3.v4.min.js"></script>
+</head>
+<style> /* set the CSS */
+.line {
+  fill: none;
+  stroke-width: 2px;
+}
+#line1{
+  stroke: greenyellow;
+}
+#line2 {
+  stroke: red;
+  
+}
+#line3 {
+  stroke: yellow;
+}
+#line4 {
+  stroke: pink;
+}
+#line5 {
+  stroke: steelblue;
+}
+</style>
+<body>
+<script>
+var margin = {top: 20, right: 20, bottom: 30, left: 70},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+var parseTime = d3.timeParse("%y");
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+var line1 = d3.line()
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.income1); });
+var line2 = d3.line()
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.income2); });
+var line3 = d3.line()
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.income3); });
+var line4 = d3.line()
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.income4); });
+var line5 = d3.line()
+    .x(function(d) { return x(d.year); })
+    .y(function(d) { return y(d.income5); });
+
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
+d3.csv("./income.csv", function(error, data) {
+  console.log(data);
+  if (error) throw error;
+  data.forEach(function(d) {
+      d.year = parseTime(d.year);
+      d.income1 = +d.income1;
+      d.income2 = +d.income2;
+      d.income3 = +d.income3;
+      d.income4 = +d.income4;
+      d.income5 = +d.income5;
+  });
+  x.domain(d3.extent(data, function(d) { return d.year; }));
+  y.domain([0, d3.max(data, function(d) { return d.income5; })]);
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("id","line1")
+      .attr("d", line1);
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("id","line2")
+      .attr("d", line2);
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("id","line3")
+      .attr("d", line3);
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("id","line4")
+      .attr("d", line4);
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("id","line5")
+      .attr("d", line5);
+
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+  svg.append("g")
+      .call(d3.axisLeft(y));
+});
+</script>
+</body>
