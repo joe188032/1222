@@ -14,16 +14,23 @@ var valueline=d3.line()
                 .x(function(d){return d.month};)
                 .y(function(d){return d.gdp};);
 	
-d3.csv("./gdp.csv", 
-	function(data,error)
-	{
-	        if (error) throw error; 
-	        console.log(data);
-	        if (error) throw error;
-                data.forEach(function(d) {
-                d.month = parseTime(d.month);
-                d.gdp = +d.gdp;})
-        });
+// d3.csv("./gdp.csv", 
+// 	function(data,error)
+// 	{
+// 	        if (error) throw error; 
+// 	        console.log(data);
+// 	        if (error) throw error;
+//                 data.forEach(function(d) {
+//                 d.month = parseTime(d.month);
+//                 d.gdp = +d.gdp;})
+//         });
+d3.csv("./gdp.csv", function(error, data) {
+  console.log(data);
+  if (error) throw error;
+  data.forEach(function(d) {
+      d.month = parseTime(d.month);
+      d.gdp = +d.gdp;
+  });
 // 		var ln = data.length;
 // 		var maxy = d3.max(data, function(d){ return d.gdp; });
 // 	        console.log(maxy);
