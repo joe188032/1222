@@ -24,6 +24,7 @@ var valueline=d3.line()
 //                 d.month = parseTime(d.month);
 //                 d.gdp = +d.gdp;})
 //         });
+
 d3.csv("./gdp.csv", function(error, data) {
   console.log(data);
   if (error) throw error;
