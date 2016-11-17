@@ -30,8 +30,8 @@
 var margin = {top: 20, right: 20, bottom: 30, left: 70},
     width = 960 - margin.left - margin.right,
     height = 500 - margin.top - margin.bottom;
-var parseTime = d3.timeParse("%b-%y");
-var x = d3.scaleTime().range([0, width]);
+// var parseTime = d3.timeParse("%b-%y");
+var x = d3.scaleLinear().range([0, width]);
 var y = d3.scaleLinear().range([height, 0]);
 var line1 = d3.line()
     .x(function(d) { return x(d.year); })
@@ -64,7 +64,7 @@ d3.csv("./income.csv", function(error, data) {
   console.log(data);
   if (error) throw error;
   data.forEach(function(d) {
-      d.year = parseTime(d.year);
+      d.year = +d.year;
       d.income1 = +d.income1;
       d.income2 = +d.income2;
       d.income3 = +d.income3;
