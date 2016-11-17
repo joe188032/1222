@@ -16,8 +16,8 @@
 //     width = 960 - margin.left - margin.right,
 //     height = 500 - margin.top - margin.bottom;
 var parseTime = d3.timeParse("%b-%y");
-// var x = d3.scaleTime().range([0, width]);
-// var y = d3.scaleLinear().range([height, 0]);
+var x = d3.scaleTime().range([0, width]).domain(d3.extent(data, function(d) { return d.month; }));
+var y = d3.scaleLinear().range([height, 0]).domain([0, d3.max(data, function(d) { return d.gdp; })]);
 var valueline = d3.line()
     .x(function(d) { return x(d.month); })
     .y(function(d) { return y(d.gdp); });
