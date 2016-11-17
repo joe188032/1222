@@ -7,12 +7,12 @@
 </head>
 <body>
 <script type="text/javascript">
-var width = 1024;
-var height = 768;
-// var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
-var valueline=d3.line()
-                .x(function(d){return d.month};)
-                .y(function(d){return d.gdp};);
+// var width = 1024;
+// var height = 768;
+// // var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
+// var valueline=d3.line()
+//                 .x(function(d){return d.month};)
+//                 .y(function(d){return d.gdp};);
 	
 // d3.csv("./gdp.csv", 
 // 	function(data,error)
@@ -25,6 +25,21 @@ var valueline=d3.line()
 //                 d.gdp = +d.gdp;})
 //         });
 
+var margin = {top: 20, right: 20, bottom: 30, left: 70},
+    width = 960 - margin.left - margin.right,
+    height = 500 - margin.top - margin.bottom;
+var parseTime = d3.timeParse("%b-%y");
+var x = d3.scaleTime().range([0, width]);
+var y = d3.scaleLinear().range([height, 0]);
+var valueline = d3.line()
+    .x(function(d) { return x(d.month); })
+    .y(function(d) { return y(d.gdp); });
+var svg = d3.select("body").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform",
+          "translate(" + margin.left + "," + margin.top + ")");
 d3.csv("./gdp.csv", function(error, data) {
   console.log(data);
   if (error) throw error;
@@ -32,6 +47,18 @@ d3.csv("./gdp.csv", function(error, data) {
       d.month = parseTime(d.month);
       d.gdp = +d.gdp;
   });
+  x.domain(d3.extent(data, function(d) { return d.month; }));
+  y.domain([0, d3.max(data, function(d) { return d.gdp; })]);
+  svg.append("path")
+      .data([data])
+      .attr("class", "line")
+      .attr("d", valueline);
+  svg.append("g")
+      .attr("transform", "translate(0," + height + ")")
+      .call(d3.axisBottom(x));
+  svg.append("g")
+      .call(d3.axisLeft(y));
+});
 // 		var ln = data.length;
 // 		var maxy = d3.max(data, function(d){ return d.gdp; });
 // 	        console.log(maxy);
