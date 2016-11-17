@@ -36,6 +36,8 @@ d3.csv("./gdp.csv", function(error, data) {
   });
   x.domain(d3.extent(data, function(d) { return d.month; }));
   y.domain([0, d3.max(data, function(d) { return d.gdp; })]);
+  var maxy=d3.max(data, function(d) { return d.gdp; });
+  console.log(maxy);
   svg.append("path")
       .data([data])
       .attr("class", "line")
