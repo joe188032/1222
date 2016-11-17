@@ -22,8 +22,8 @@ d3.csv("./gdp.csv",
 	        if (error) throw error;
                 data.forEach(function(d) {
                 d.month = parseTime(d.month);
-                d.gdp = +d.gdp;
-        }));
+                d.gdp = +d.gdp;})
+        });
 // 		var ln = data.length;
 // 		var maxy = d3.max(data, function(d){ return d.gdp; });
 // 	        console.log(maxy);
