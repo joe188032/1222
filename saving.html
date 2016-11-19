@@ -10,13 +10,13 @@
 var width = 1024;
 var height = 768;
 var ctrl = d3.select("body").append("svg").attr("width", width).attr("height", height);
-d3.csv("./practice.csv", 
+d3.csv("./gdp.csv", 
 	function(data)
 	{
 		var ln = data.length;
 		console.log(data);
-		var maxy = d3.max(data, function(d){ return d.SAVINGS*1; });
-		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.SAVINGS*(height/maxy);});
+		var maxy = d3.max(data, function(d){ return d.gdp*1; });
+		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.gdp*(height/maxy);});
 		ctrl.append("path").attr("d", function(d){
 			return "M0,"+height+"L"+width+","+height;
 		}).attr("stroke", "black").attr("fill", "none");
