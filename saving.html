@@ -16,7 +16,7 @@ d3.csv("./practice.csv",
 		var ln = data.length;
 		console.log(data);
 		var maxy = d3.max(data, function(d){ return d.SAVINGS*1; });
-		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.SAVINGS*(height/maxy)*0.2;});
+		var lines = d3.line().x(function(d,i){return i*(width/ln);}).y(function(d){return height-d.SAVINGS*(height/maxy);});
 		ctrl.append("path").attr("d", function(d){
 			return "M0,"+height+"L"+width+","+height;
 		}).attr("stroke", "black").attr("fill", "none");
