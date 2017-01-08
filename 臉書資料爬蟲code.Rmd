@@ -1,0 +1,188 @@
+---
+title: "facebook posts crawl code"
+output:
+  html_document: default
+  html_notebook: default
+---
+
+
+```{r eval=FALSE}
+query<-"me?fields=friends.limit(20){id,name,posts.limit(30){message}}"
+access_token<-"EAACEdEose0cBACdEKWYU832aH1Mj4ZCZCoZC3wTYkmWsbSsIDeY83cLzsZAbF4H9QuFy80By2yM3mcbNhDlTZABnTYLG74zpHNCBqkSV1VZAIKPI2Nib98EYFCgKzMcNbD0JMrtOBaBr7heFRr97gpUo2u7NAyBI7rhICYkoZA8bAZDZD"
+url<-sprintf("https://graph.facebook.com/v2.8/%s&access_token=%s",query,access_token)
+library(rjson)
+library(RCurl)
+library(plyr)
+options(fileEncoding = 'utf-8')
+options(stringsAsFactors = F)
+data <- getURL(url)
+res<-fromJSON(data, unexpected.escape = "keep")
+
+result<-data.frame()
+
+for(i in (1:20)){
+#'if(i==6){i=i+1}
+all <- do.call('rbind.fill', lapply(res$friends$data[[i]]$posts$data, as.data.frame))
+nexturl<-res$friends$data[[i]]$posts$paging$'next'
+
+while(T){
+  nextdata <- getURL(nexturl)
+  nextres<-fromJSON(nextdata, unexpected.escape = "keep")
+  #'nextres<-fromJSON(nextdata, unexpected.escape = "keep")
+  nextall <- do.call('rbind.fill', lapply(nextres$data, as.data.frame))
+  all<-rbind.fill(all,nextall)
+  nexturl<-nextres$paging$"next"
+  if(is.null(nexturl)){
+    break
+  }
+  print(nrow(all))
+}
+# colnames(all)[2]<-"postid"
+# id<-strsplit(all$postid,"_",fixed = T)
+# id<-sapply(id,"[",1)
+# all<-cbind(id,all)
+# all<-left_join(all,alln,by="id")
+result<-rbind.fill(result,all)
+}
+
+#'2
+nexturl1<-res$friends$paging$'next'
+if(is.null(nexturl1)){
+  break
+}
+data<-getURL(nexturl1)
+res<-fromJSON(data, unexpected.escape = "keep")
+for(i in (1:20)){
+#  if(i==5){i=i+1}
+#  if(i==14){i=i+1}
+#  if(i==17){i=i+1}
+#  if(i==19){i=i+1}
+  all <- do.call('rbind.fill', lapply(res$data[[i]]$posts$data, as.data.frame))
+
+  nexturl<-res$data[[i]]$posts$paging$'next'
+  while(T){
+    nextdata <- getURL(nexturl)
+    nextres<-fromJSON(nextdata, unexpected.escape = "keep")
+    nextall <- do.call('rbind.fill', lapply(nextres$data, as.data.frame))
+    all<-rbind.fill(all,nextall)
+    nexturl<-nextres$paging$"next"
+    if(is.null(nexturl)){
+      break
+    }
+    print(nrow(all))
+  }
+  result<-rbind(result,all)
+}
+#'3
+nexturl1<-res$paging$'next'
+if(is.null(nexturl1)){
+  break
+}
+data1<-getURL(nexturl1)
+res1<-fromJSON(data1, unexpected.escape = "keep")
+for(i in (1:20)){
+#'  if(i==4){i=i+1}
+#'  if(i==6){i=i+1}
+#'  if(i==15){i=i+1}
+    all <- do.call('rbind.fill', lapply(res1$data[[i]]$posts$data, as.data.frame))
+
+  nexturl<-res1$data[[i]]$posts$paging$'next'
+  while(T){
+    nextdata <- getURL(nexturl)
+    nextres<-fromJSON(nextdata, unexpected.escape = "keep")
+    nextall <- do.call('rbind.fill', lapply(nextres$data, as.data.frame))
+    all<-rbind.fill(all,nextall)
+    nexturl<-nextres$paging$"next"
+    if(is.null(nexturl)){
+      break
+    }
+    print(nrow(all))
+  }
+  result<-rbind(result,all)
+}
+save(result,file = "facebook.RData")
+#'4
+nexturl1<-res1$paging$'next'
+if(is.null(nexturl1)){
+  break
+}
+data1<-getURL(nexturl1)
+res1<-fromJSON(data1, unexpected.escape = "keep")
+for(i in (1:4)){
+#'  if(i==1){i=i+1}
+  all <- do.call('rbind.fill', lapply(res1$data[[i]]$posts$data, as.data.frame))
+
+  nexturl<-res1$data[[i]]$posts$paging$'next'
+  while(T){
+    nextdata <- getURL(nexturl)
+    nextres<-fromJSON(nextdata, unexpected.escape = "keep")
+    nextall <- do.call('rbind.fill', lapply(nextres$data, as.data.frame))
+    all<-rbind.fill(all,nextall)
+    nexturl<-nextres$paging$"next"
+    if(is.null(nexturl)){
+      break
+    }
+    print(nrow(all))
+  }
+  result<-rbind(result,all)
+}
+
+save(result,file = "facebook.RData")
+
+for(i in c(2:len(fnames))){
+
+  ubike.c <- unlist(ubike$retVal)
+  ubike.m <- matrix(ubike.c, byrow = T, ncol = 14)
+  ubike.df <- data.frame(ubike.m, stringsAsFactors = F)
+  sbi <- as.numeric(ubike.df[,4])
+  names(sbi)<- ubike.df[,2]
+  alldf <- cbind(alldf, sbi)
+  colnames(alldf)[i] <- substr(fnames[i], 21, 24)
+}
+save(result,file = "facebook.RData")
+
+
+all<-result
+
+
+
+#'----------------------------------------------------------
+colnames(result)[2]<-"postid"
+id<-strsplit(result$postid,"_",fixed = T)
+id<-sapply(id,"[",1)
+result<-cbind(id,result)
+result<-left_join(result,alln,by="id")
+all1<-all
+colnames(all1)[2]<-"postid"
+id<-strsplit(all1$postid,"_",fixed = T)
+id<-sapply(id,"[",1)
+all1<-cbind(id,all1)
+all1<-left_join(all1,alln,by="id")
+
+save(result,file = "facebook.RData")
+
+queryn<-"me?fields=friends.limit(60){name,id}"
+access_tokenn<-"EAACEdEose0cBACP3ac9umQmzqLdGgGpVgtsKG3SOyQhBpg9SU2g6YTUipbS4Ip0TLxY3u5DkmLD3mv4GmSYw9EPEaFQxoZCkJOuokSKAh2rw6X2QWZBv2iIxaDDDRGhIXpbmsn4ZCZBZAmiUkWRSAsX3thzssCjVMVVdc3NWPfgZDZD"
+urln<-sprintf("https://graph.facebook.com/v2.8/%s&access_token=%s",queryn,access_tokenn)
+urln<-"https://graph.facebook.com/v2.8/me?fields=friends.limit(68)%7Bname%2Cid%7D&access_token=EAACEdEose0cBABtz3kfrd5aH4YjgIYolvwyN84GTyMWC46A4X0638ZAlCCHEOICmbwTlJaEDCubr9pEU326aFK64iZC8EotHMM3TUeAMLtg9Lc3AeB4ZBdwdB9VOhSetyDcavklRBWqQmgI4YJ1oyNw4umdJC1yfZBEZAnXJvjQZDZD"
+options(fileEncoding = 'utf-8')
+options(stringsAsFactors = F)
+datan <- getURL(urln)
+resn<-fromJSON(datan, unexpected.escape = "keep")
+
+alln<- do.call('rbind.fill', lapply(resn$friends$data, as.data.frame))
+nexturln<-resn$friends$paging$'next'
+while(T){
+    nextdatan <- getURL(nexturln)
+    nextresn<-fromJSON(nextdatan, unexpected.escape = "keep")
+    nextalln <- do.call('rbind.fill', lapply(nextresn$data, as.data.frame))
+    alln<-rbind.fill(alln,nextalln)
+    nexturln<-nextresn$paging$"next"
+    if(is.null(nexturln)){
+      break
+    }
+    print(nrow(alln))
+  }
+save(alln,file = "idname.RData")
+
+```
